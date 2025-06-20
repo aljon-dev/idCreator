@@ -1,3 +1,25 @@
+<script setup lang="ts">
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+
+// Form data
+const email = ref<string>('')
+const password = ref<string>('')
+const showPassword = ref<boolean>(false)
+
+const router = useRouter()
+
+// Methods
+const togglePassword = (): void => {
+  showPassword.value = !showPassword.value
+}
+
+const handleLogin = (): void => {
+  console.log('Logging in with:', email.value, password.value)
+  // TODO: Add login API integration here
+}
+</script>
+
 <template>
   <div
     class="flex flex-row justify-center items-center bg-cover bg-center min-h-screen bg-[url('@/assets/background-ls.png')]"
@@ -91,28 +113,6 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
-
-// Form data
-const email = ref<string>('')
-const password = ref<string>('')
-const showPassword = ref<boolean>(false)
-
-const router = useRouter()
-
-// Methods
-const togglePassword = (): void => {
-  showPassword.value = !showPassword.value
-}
-
-const handleLogin = (): void => {
-  console.log('Logging in with:', email.value, password.value)
-  // TODO: Add login API integration here
-}
-</script>
 
 <style scoped>
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons');

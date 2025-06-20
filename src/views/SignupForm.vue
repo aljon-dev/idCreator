@@ -1,3 +1,37 @@
+<script setup lang="ts">
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+
+// Form data
+const name = ref<string>('')
+const email = ref<string>('')
+const password = ref<string>('')
+const confirmPassword = ref<string>('')
+const showPassword = ref<boolean>(false)
+const showConfirmPassword = ref<boolean>(false)
+
+const router = useRouter()
+
+// Methods
+const togglePassword = (): void => {
+  showPassword.value = !showPassword.value
+}
+
+const toggleConfirmPassword = (): void => {
+  showConfirmPassword.value = !showConfirmPassword.value
+}
+
+const handleSignup = (): void => {
+  if (password.value !== confirmPassword.value) {
+    alert('Passwords do not match.')
+    return
+  }
+
+  console.log('Signing up with:', name.value, email.value, password.value)
+  // TODO: Add signup API integration here
+}
+</script>
+
 <template>
   <div
     class="flex flex-row justify-center items-center bg-cover bg-center min-h-screen bg-[url('@/assets/background-ls.png')]"
@@ -113,40 +147,6 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
-
-// Form data
-const name = ref<string>('')
-const email = ref<string>('')
-const password = ref<string>('')
-const confirmPassword = ref<string>('')
-const showPassword = ref<boolean>(false)
-const showConfirmPassword = ref<boolean>(false)
-
-const router = useRouter()
-
-// Methods
-const togglePassword = (): void => {
-  showPassword.value = !showPassword.value
-}
-
-const toggleConfirmPassword = (): void => {
-  showConfirmPassword.value = !showConfirmPassword.value
-}
-
-const handleSignup = (): void => {
-  if (password.value !== confirmPassword.value) {
-    alert('Passwords do not match.')
-    return
-  }
-
-  console.log('Signing up with:', name.value, email.value, password.value)
-  // TODO: Add signup API integration here
-}
-</script>
 
 <style scoped>
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
