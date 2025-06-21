@@ -59,7 +59,6 @@ const handleLogin = (): void => {
                   v-model="email"
                   type="email"
                   placeholder="Email"
-                  required
                   class="w-full p-4 text-base border border-gray-300 rounded-lg focus:outline-none focus:border-orange-500 transition-colors"
                 />
               </div>
@@ -70,7 +69,6 @@ const handleLogin = (): void => {
                   :type="showPassword ? 'text' : 'password'"
                   v-model="password"
                   placeholder="Password"
-                  required
                   class="w-full p-4 pr-12 text-base border border-gray-300 rounded-lg focus:outline-none focus:border-orange-500 transition-colors"
                 />
                 <span
@@ -93,10 +91,9 @@ const handleLogin = (): void => {
 
               <!-- Login Button -->
               <button
-                type="submit"
                 class="w-full p-4 bg-orange-500 hover:bg-orange-600 text-white text-lg font-semibold rounded-lg transition-colors duration-200 mt-6"
               >
-                Login
+                <router-link to="/Dashboard" class="text-gray"> Login </router-link>
               </button>
             </form>
 
