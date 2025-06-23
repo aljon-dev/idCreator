@@ -147,7 +147,6 @@ const toggleDarkMode = () => {
         </div>
       </div>
 
-      <!-- Fixed user profile section -->
       <div class="flex ml-10 items-center space-x-3 mb-6">
         <div class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
           <span class="text-gray-600 text-sm">JD</span>
