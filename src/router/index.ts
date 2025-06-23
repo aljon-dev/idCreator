@@ -7,7 +7,6 @@ import Orders from '../views/Orders.vue'
 import CreateOrder from '../views/CreateOrder.vue'
 import Settings from '../views/Settings.vue'
 
-
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -49,7 +48,7 @@ const router = createRouter({
           path: 'settings',
           name: 'Settings',
           component: Settings,
-        }
+        },
       ],
     },
   ],

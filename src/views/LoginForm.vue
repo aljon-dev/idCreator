@@ -90,11 +90,13 @@ const handleLogin = (): void => {
               </div>
 
               <!-- Login Button -->
-              <button
-                class="w-full p-4 bg-orange-500 hover:bg-orange-600 text-white text-lg font-semibold rounded-lg transition-colors duration-200 mt-6"
-              >
-                <router-link to="/Dashboard" class="text-gray"> Login </router-link>
-              </button>
+              <router-link to="/Dashboard" class="text-gray">
+                <button
+                  class="w-full p-4 bg-orange-500 hover:bg-orange-600 text-white text-lg font-semibold rounded-lg transition-colors duration-200 mt-6"
+                >
+                  Login
+                </button>
+              </router-link>
             </form>
 
             <!-- Sign Up Link -->

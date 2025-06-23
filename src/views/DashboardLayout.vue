@@ -63,10 +63,7 @@
         </div>
 
         <!-- Three-dot menu -->
-        <div
-          @click="toggleDropdown"
-          class="ml-5 cursor-pointer text-gray-400 select-none relative"
-        >
+        <div @click="toggleDropdown" class="ml-5 cursor-pointer text-gray-400 select-none relative">
           <i class="fas fa-ellipsis-h"></i>
 
           <div
