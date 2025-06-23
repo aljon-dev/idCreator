@@ -62,49 +62,22 @@ const orders = ref([
     shippingService: 'Express',
     trackingCode: '940010010936113003113',
   },
-  {
-    id: 59182,
-    orderNumber: '59217346',
-    status: 'Draft',
-    item: 41,
-    customerName: 'Cameron Williamson',
-    shippingService: 'Express',
-    trackingCode: '940010010936113003113',
-  },
-  {
-    id: 59182,
-    orderNumber: '59217347',
-    status: 'Draft',
-    item: 41,
-    customerName: 'Cameron Williamson',
-    shippingService: 'Priority',
-    trackingCode: '940010010936113003113',
-  },
-  {
-    id: 59182,
-    orderNumber: '59217347',
-    status: 'Draft',
-    item: 41,
-    customerName: 'Cameron Williamson',
-    shippingService: 'Express',
-    trackingCode: '940010010936113003113',
-  },
 ])
 
 const getStatusStyle = (status) => {
   switch (status) {
     case 'New order':
-      return 'bg-blue-100 text-blue-800'
+      return 'bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs'
     case 'Inproduction':
-      return 'bg-yellow-100 text-yellow-800'
+      return 'bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-xs'
     case 'Shipped':
-      return 'bg-green-100 text-green-800'
+      return 'bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs'
     case 'Cancelled':
-      return 'bg-red-100 text-red-800'
+      return 'bg-red-100 text-red-800 px-2 py-1 rounded-full text-xs'
     case 'Rejected':
-      return 'bg-gray-100 text-gray-800'
+      return 'bg-gray-100 text-gray-800 px-2 py-1 rounded-full text-xs'
     case 'Draft':
-      return 'bg-purple-100 text-purple-800'
+      return 'bg-purple-100 text-purple-800 px-2 py-1 rounded-full text-xs'
     default:
       return ''
   }
@@ -127,188 +100,95 @@ const getShippingDot = (service) => {
   }
   return colors[service] || 'bg-gray-500'
 }
-
-const toggleDarkMode = () => {
-  isDarkMode.value = !isDarkMode.value
-}
 </script>
 
 <template>
-  <div class="flex h-screen bg-gray-50">
-    <!--- Side Bar -->
+  <div class="p-2 bg-gray-50 min-h-screen">
+    <h1 class="text-2xl font-semibold text-gray-900 mb-8 text-center">Dashboard</h1>
 
-    <div class="w-64 bg-white shadow-md">
-      <div class="p-6">
-        <div class="flex items-center mb-6">
-          <div class="w-6 h-6 bg-orange-500 rounded flex items-center justify-center">
-            <span class="text-white text-xs font-bold"> ID </span>
-          </div>
-          <span class="font-semibold text-gray-900">ID CREATOR</span>
+    
+    <div class="border-t border-gray-300 mb-6"></div>
+
+
+    <div class="grid grid-cols-3 gap-6 mb-8">
+      <div class="bg-white rounded-lg shadow p-6">
+        <div class="text-center">
+          <div class="text-xl font-bold text-gray-900 mb-2">SUBMITTED</div>
+          <div class="text-xl font-bold text-gray-900">ORDERS</div>
+          <div class="text-3xl font-bold text-gray-900 mt-4">{{ stats.submitted }}</div>
         </div>
       </div>
 
-      <!-- Fixed user profile section -->
-      <div class="flex ml-10 items-center space-x-3 mb-6">
-        <div class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
-          <span class="text-gray-600 text-sm">JD</span>
+      <div class="bg-white rounded-lg shadow p-6">
+        <div class="text-center">
+          <div class="text-xl font-bold text-gray-900 mb-2">PENDING</div>
+          <div class="text-xl font-bold text-gray-900">ORDERS</div>
+          <div class="text-3xl font-bold text-gray-900 mt-4">{{ stats.pending }}</div>
         </div>
-        <div class="flex-1">
-          <div class="text-sm font-medium text-gray-900">Juan Dela Cruz</div>
-          <div class="text-xs text-gray-500">JuanDC@gmail.com</div>
-        </div>
-        <i class="fas fa-ellipsis-h text-gray-400"></i>
       </div>
 
-      <nav class="mt-6">
-        <div class="px-6 space-y-2">
-          <a
-            href="#"
-            class="flex items-center space-x-3 px-3 py-2 rounded-lg bg-gray-100 text-gray-900"
-          >
-            <i class="fas fa-home w-5"> </i>
-            <span class="text-sm font-medium">Dashboard</span>
-          </a>
-
-          <a
-            href="#"
-            class="flex items-center space-x-3 px-3 py-2 rounded-lg bg-gray-100 text-gray-900"
-          >
-            <i class="fas fa-box w-5"> </i>
-            <span class="text-sm font-medium">Order</span>
-          </a>
-
-          <a
-            href="#"
-            class="flex items-center space-x-3 px-3 py-2 rounded-lg bg-gray-100 text-gray-900"
-          >
-            <i class="fas fa-plus-circle w-5"> </i>
-            <span class="text-sm font-medium">Create Order</span>
-          </a>
-
-          <a
-            href="#"
-            class="flex items-center space-x-3 px-3 py-2 rounded-lg bg-gray-100 text-gray-900"
-          >
-            <i class="fas fa-cog w-5"> </i>
-            <span class="text-sm font-medium">Setting </span>
-          </a>
+      <div class="bg-white rounded-lg shadow p-6">
+        <div class="text-center">
+          <div class="text-xl font-bold text-gray-900 mb-2">PRINTED</div>
+          <div class="text-xl font-bold text-gray-900">ORDERS</div>
+          <div class="text-3xl font-bold text-gray-900 mt-4">{{ stats.printed }}</div>
         </div>
-      </nav>
+      </div>
     </div>
-    <div class="flex-1 p-8">
-      <h1 class="text-2xl font-semibold text-gray-900 mb-8">Dashboard</h1>
-      <div class="grid grid-cols-3 gap-6 mb-8">
-        <div class="bg-gray-100 rounded-lg p-6">
-          <div class="text-center">
-            <div class="text-xl font-bold text-gray-900 mb-2">SUBMITTED</div>
-            <div class="text-xl font-bold text-gray-900">ORDERS</div>
-            <div class="text-3xl font-bold text-gray-900 mt-4">{{ stats.submitted }}</div>
-          </div>
-        </div>
 
-        <div class="bg-gray-100 rounded-lg p-6">
-          <div class="text-center">
-            <div class="text-xl font-bold text-gray-900 mb-2">SUBMITTED</div>
-            <div class="text-xl font-bold text-gray-900">ORDERS</div>
-            <div class="text-3xl font-bold text-gray-900 mt-4">{{ stats.pending }}</div>
-          </div>
-        </div>
-
-        <div class="bg-gray-100 rounded-lg p-6">
-          <div class="text-center">
-            <div class="text-xl font-bold text-gray-900 mb-2">SUBMITTED</div>
-            <div class="text-xl font-bold text-gray-900">ORDERS</div>
-            <div class="text-3xl font-bold text-gray-900 mt-4">{{ stats.printed }}</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="bg-white rounded-lg shadow-sm overflow-hidden">
-        <div class="overflow-x-auto">
-          <table class="w-full">
-            <thead class="bg-gray-50">
-              <tr>
-                <th
-                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                >
-                  Order ID
-                </th>
-                <th
-                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                >
-                  Order Number
-                </th>
-                <th
-                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                >
-                  Status
-                </th>
-                <th
-                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                >
-                  Item
-                </th>
-                <th
-                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                >
-                  Customer Name
-                </th>
-                <th
-                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                >
-                  Shipping Service
-                </th>
-                <th
-                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                >
-                  Tracking Code
-                </th>
-              </tr>
-            </thead>
-            <tbody class="bg-white divide-y divide-gray-200">
-              <tr v-for="(order, index) in orders" :key="index" class="bg-gray-50">
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  {{ order.id }}
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  {{ order.orderNumber }}
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <span :class="getStatusStyle(order.status)">
-                    {{ order.status }}
+    <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="w-full">
+          <thead class="bg-gray-100">
+            <tr>
+              <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Order ID</th>
+              <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Order Number</th>
+              <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+              <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Item</th>
+              <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Customer Name</th>
+              <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Shipping Service</th>
+              <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Tracking Code</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <tr v-for="(order, index) in orders" :key="index" class="bg-gray-50">
+              <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-900">{{ order.id }}</td>
+              <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-900">{{ order.orderNumber }}</td>
+              <td class="px-6 py-4 text-center whitespace-nowrap">
+                <span :class="getStatusStyle(order.status)">
+                  {{ order.status }}
+                </span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-600">{{ order.item }}</td>
+              <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-900">{{ order.customerName }}</td>
+              <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-900">
+                <div class="flex items-center">
+                  <div :class="getShippingDot(order.shippingService)" class="w-2 h-2 rounded-full mr-2"></div>
+                  <span :class="getShippingServiceStyle(order.shippingService)">
+                    {{ order.shippingService }}
                   </span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                  {{ order.item }}
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  {{ order.customerName }}
-                </td>
-
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  <div class="flex items-center">
-                    <div
-                      :class="getShippingDot(order.shippingService)"
-                      class="w-2 h-2 rounded-full mr-2"
-                    ></div>
-                    <span :class="getShippingServiceStyle(order.shippingService)">
-                      {{ order.shippingService }}
-                    </span>
-                  </div>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                  <div class="flex items-center justify-between">
-                    {{ order.trackingCode }}
-                    <i class="fas fa-external-link-alt text-gray-400 cursor-pointer"></i>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <i class="fas fa-external-link-alt text-gray-400 cursor-pointer"></i>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-600 flex items-center justify-between">
+                {{ order.trackingCode }}
+                <i class="fas text-gray-400 cursor-pointer ml-2"></i>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
+    </div>
+
+    <!-- See More Button -->
+    <div class="mt-6 text-center">
+      <router-link
+        to="/Orders"
+        class="inline-block bg-[#DB551B] text-white font-semibold px-6 py-2 rounded-lg shadow hover:opacity-90 transition"
+      >
+        See More
+      </router-link>
     </div>
   </div>
 </template>
+
+
