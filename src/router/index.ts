@@ -6,20 +6,29 @@ import Dashboard from '../views/Dashboard.vue'
 import Orders from '../views/Orders.vue'
 import CreateOrder from '../views/CreateOrder.vue'
 import Settings from '../views/Settings.vue'
+import FrontPageForm  from '../views/FrontPageForm.vue';
+
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
-      name: 'Login',
-      component: LoginForm,
+      name: 'frontPage',
+      component: FrontPageForm,
     },
     {
       path: '/signup',
       name: 'Signup',
       component: SignupForm,
     },
+    {
+        path: '/Login',
+      name: 'Login',
+      component: LoginForm,
+
+    },
+
     {
       path: '/',
       component: DashboardLayout,
