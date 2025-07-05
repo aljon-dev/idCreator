@@ -1,8 +1,12 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { handleLogin as loginWithSupabase } from '@/assets/supabaseAuth'; 
+import { useToast } from 'vue-toast-notification'
 
 // Form data
+
+const toast = useToast();
 const email = ref<string>('')
 const password = ref<string>('')
 const showPassword = ref<boolean>(false)
@@ -14,9 +18,17 @@ const togglePassword = (): void => {
   showPassword.value = !showPassword.value
 }
 
-const handleLogin = (): void => {
-  console.log('Logging in with:', email.value, password.value)
-  // TODO: Add login API integration here
+const handleLogin = async () => {
+    const result  = await loginWithSupabase(email.value, password.value);
+
+    if(result.status === 200){
+     toast.success(result.msg);
+      router.push('/Dashboard')
+    }else{
+       toast.error(result.msg);
+    }
+    
+    
 }
 </script>
 
@@ -63,7 +75,7 @@ const handleLogin = (): void => {
                 />
               </div>
 
-              <!-- Password Input -->
+      
               <div class="relative">
                 <input
                   :type="showPassword ? 'text' : 'password'"
@@ -79,7 +91,7 @@ const handleLogin = (): void => {
                 </span>
               </div>
 
-              <!-- Forgot Password Link -->
+     
               <div class="text-right mb-4">
                 <router-link
                   to="/forgot-password"
@@ -89,17 +101,18 @@ const handleLogin = (): void => {
                 </router-link>
               </div>
 
-              <!-- Login Button -->
-              <router-link to="/Dashboard" class="text-gray">
+     
+         
                 <button
+                type="submit"
                   class="w-full p-4 bg-orange-500 hover:bg-orange-600 text-white text-lg font-semibold rounded-lg transition-colors duration-200 mt-6"
                 >
                   Login
                 </button>
-              </router-link>
+         
             </form>
 
-            <!-- Sign Up Link -->
+     
             <p class="text-center mt-6 text-gray-600">
               Don't have an account yet?
               <router-link to="/signup" class="text-gray-800 font-bold hover:underline ml-1">

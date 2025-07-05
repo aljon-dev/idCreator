@@ -87,10 +87,6 @@ const removeSignature = () => {
             </div>
             
             <form  class="space-y-6">
-
-
-             
-
               <!-- Photo Upload Section -->
               <div class="space-y-2">
                 <label class="block text-sm font-medium text-gray-700">
@@ -152,18 +148,16 @@ const removeSignature = () => {
               </div>
 
 
-                  <div class="space-y-2">
+            <div class="space-y-2">
                 <label for="School Name" class="block text-sm font-medium text-gray-700">
                  Section 
                 </label>
                 <input 
                   v-model="formData.school"
                   type="text" 
-             
                   required
                   class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="Enter Section"
-                >
+                  placeholder="Enter Section">
               </div>
 
 
