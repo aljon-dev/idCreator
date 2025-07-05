@@ -59,42 +59,7 @@
       </div>
 
       <!-- Order Info Section -->
-      <div>
-        <h3 class="text-md font-semibold text-gray-800 mb-2">Order Information</h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label class="block text-sm font-medium text-gray-700">Order ID</label>
-            <input v-model="newOrder.id" type="text" class="mt-1 w-full border rounded px-3 py-2" />
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-gray-700">Order Number</label>
-            <input v-model="newOrder.orderNumber" type="text" class="mt-1 w-full border rounded px-3 py-2" />
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-gray-700">Status</label>
-            <select v-model="newOrder.status" class="mt-1 w-full border rounded px-3 py-2">
-              <option value="New order">New order</option>
-              <option value="Inproduction">Inproduction</option>
-              <option value="Shipped">Shipped</option>
-              <option value="Cancelled">Cancelled</option>
-              <option value="Rejected">Rejected</option>
-              <option value="Draft">Draft</option>
-            </select>
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-gray-700">Item</label>
-            <input v-model="newOrder.item" type="number" class="mt-1 w-full border rounded px-3 py-2" />
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-gray-700">Shipping Service</label>
-            <input v-model="newOrder.shippingService" type="text" class="mt-1 w-full border rounded px-3 py-2" />
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-gray-700">Tracking Code</label>
-            <input v-model="newOrder.trackingCode" type="text" class="mt-1 w-full border rounded px-3 py-2" />
-          </div>
-        </div>
-      </div>
+  
 
       <!-- Template Selection -->
       <div>
@@ -157,7 +122,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 
@@ -182,10 +147,11 @@ const newOrder = ref({
 })
 
 const selectedTemplate = ref(null)
-const importedTemplate = ref(null)
+const importedTemplate = ref<string | null>(null)
 
-const handleImportTemplate = (event) => {
-  const file = event.target.files[0]
+const handleImportTemplate = (event: Event) => {
+  const target = event.target as HTMLInputElement
+  const file = target?.files?.[0]
   if (file && file.type.startsWith('image/')) {
     const reader = new FileReader()
     reader.onload = () => {
