@@ -1,3 +1,55 @@
+<script setup>
+import { onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { supabase } from '../assets/supabase';
+import { useToast } from 'vue-toast-notification'
+
+
+const toast = useToast();
+const email = ref('');
+
+const showDropdown = ref(false)
+const router = useRouter()
+
+const toggleDropdown = () => {
+  showDropdown.value = !showDropdown.value
+}
+
+  const getUser = async () => {
+    const {data:userdata,error:userError} = await supabase.auth.getUser();
+    if(userdata?.user){
+
+      email.value = userdata.user.email;
+
+    }else{
+      toast.error('Please Login Again Cant Go Back')
+      router.push('/login')
+    }
+    
+
+  }
+
+  const signOut = async () =>{
+      const {error} =  await supabase.auth.signOut();
+      if(error){
+        toast.error(error.message);
+      }
+      toast.success('Successfully logout ')
+      router.push('/Login')
+  }
+
+
+onMounted(()=>{
+getUser();
+
+})
+
+const logout = () => {
+  alert('Logging out...')
+  router.push('/')
+}
+</script>
+
 <template>
   <div class="flex h-screen bg-gray-50">
     <!-- Sidebar -->
@@ -55,11 +107,11 @@
       <!-- User Profile at bottom -->
       <div class="p-6 flex items-center space-x-3">
         <div class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
-          <span class="text-gray-600 text-sm">JD</span>
+          <span class="text-gray-600 text-sm">USER</span>
         </div>
         <div>
-          <div class="text-sm font-medium text-gray-900">Juan Dela Cruz</div>
-          <div class="text-xs text-gray-500">juandc@gmail.com</div>
+   
+          <div class="text-xs text-gray-500">{{email ?? 'No Email'}}</div>
         </div>
 
         <!-- Three-dot menu -->
@@ -72,7 +124,7 @@
           >
             <button
               class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-              @click="logout"
+              @click="signOut"
             >
               <i class="fas fa-sign-out-alt mr-2"></i>Logout
             </button>
@@ -88,19 +140,4 @@
   </div>
 </template>
 
-<script setup>
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
 
-const showDropdown = ref(false)
-const router = useRouter()
-
-const toggleDropdown = () => {
-  showDropdown.value = !showDropdown.value
-}
-
-const logout = () => {
-  alert('Logging out...')
-  router.push('/')
-}
-</script>
