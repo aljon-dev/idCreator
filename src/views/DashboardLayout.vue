@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { supabase } from '../assets/supabase';
@@ -19,7 +19,7 @@ const toggleDropdown = () => {
     const {data:userdata,error:userError} = await supabase.auth.getUser();
     if(userdata?.user){
 
-      email.value = userdata.user.email;
+      email.value = userdata.user.email || '';
 
     }else{
       toast.error('Please Login Again Cant Go Back')

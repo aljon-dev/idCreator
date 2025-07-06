@@ -95,7 +95,7 @@ const submitOrders  = async () =>{
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div>
             <label class="block text-sm font-medium text-gray-700">Title</label>
-             <input type="text" v-model="newOrder.title"/>
+             <input class="mt-1 w-full border rounded px-3 py-2" type="text" v-model="newOrder.title"/>
           </div>
           <div>
             <label class="block text-sm font-medium text-gray-700">First Name</label>

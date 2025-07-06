@@ -1,4 +1,4 @@
-<script setup lang="js">
+<script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
 import {supabase}  from '@/assets/supabase';
 import { useToast } from 'vue-toast-notification'; 
@@ -12,7 +12,7 @@ const stats = reactive({
   printed: 0,
 })
 
-const orders = ref([])
+const orders = ref<any[]>([])
 
 const loadData =  async () => {
 
@@ -22,14 +22,11 @@ const {data:orderData,error:loadingError} = await supabase.from('Orders').select
       toast.error('Error loading Data')
    }
 
-   orderData.forEach((order)=>{
-      orders.push(orders)
-
-   })
+   if (orderData) {
+      orders.value = orderData
+   }
    
-   
-
-
+  
 
 }
 
@@ -37,7 +34,7 @@ const {data:orderData,error:loadingError} = await supabase.from('Orders').select
 
 
 
-const getStatusStyle = (status) => {
+const getStatusStyle = (status:string) => {
   switch (status) {
     case 'New order':
       return 'bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs'
@@ -56,7 +53,7 @@ const getStatusStyle = (status) => {
   }
 }
 
-const getShippingServiceStyle = (service) => {
+const getShippingServiceStyle = (service:any) => {
   const style = {
     Standard: 'text-purple-600',
     Priority: 'text-blue-600',
@@ -65,7 +62,7 @@ const getShippingServiceStyle = (service) => {
   return style[service] || ''
 }
 
-const getShippingDot = (service) => {
+const getShippingDot = (service:string) => {
   const colors = {
     Standard: 'bg-purple-500',
     Priority: 'bg-blue-500',
