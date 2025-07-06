@@ -1,75 +1,41 @@
 <script setup lang="js">
-import { ref, reactive } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
+import {supabase}  from '@/assets/supabase';
+import { useToast } from 'vue-toast-notification'; 
 
-
-
-
-
-
+const toast = useToast();
 
 
 const stats = reactive({
-  submitted: 80,
-  pending: 80,
-  printed: 80,
+  submitted: 0,
+  pending: 0,
+  printed: 0,
 })
 
-const orders = ref([
-  {
-    id: 59217,
-    orderNumber: '59217342',
-    status: 'New order',
-    item: 1,
-    customerName: 'Cody Fisher',
-    shippingService: 'Standard',
-    trackingCode: '940010010936113003113',
-  },
-  {
-    id: 59213,
-    orderNumber: '59217343',
-    status: 'Inproduction',
-    item: 2,
-    customerName: 'Kristin Watson',
-    shippingService: 'Priority',
-    trackingCode: '940010010936113003113',
-  },
-  {
-    id: 59219,
-    orderNumber: '59217344',
-    status: 'Shipped',
-    item: 12,
-    customerName: 'Esther Howard',
-    shippingService: 'Express',
-    trackingCode: '940010010936113003113',
-  },
-  {
-    id: 59220,
-    orderNumber: '59217345',
-    status: 'Cancelled',
-    item: 22,
-    customerName: 'Jenny Wilson',
-    shippingService: 'Express',
-    trackingCode: '940010010936113003113',
-  },
-  {
-    id: 59223,
-    orderNumber: '59217346',
-    status: 'Rejected',
-    item: 32,
-    customerName: 'John Smith',
-    shippingService: 'Express',
-    trackingCode: '940010010936113003113',
-  },
-  {
-    id: 59182,
-    orderNumber: '59217346',
-    status: 'Draft',
-    item: 41,
-    customerName: 'Cameron Williamson',
-    shippingService: 'Express',
-    trackingCode: '940010010936113003113',
-  },
-])
+const orders = ref([])
+
+const loadData =  async () => {
+
+const {data:orderData,error:loadingError} = await supabase.from('Orders').select('*');
+
+   if(loadingError){
+      toast.error('Error loading Data')
+   }
+
+   orderData.forEach((order)=>{
+      orders.push(orders)
+
+   })
+   
+   
+
+
+
+}
+
+
+
+
 
 const getStatusStyle = (status) => {
   switch (status) {
@@ -107,6 +73,11 @@ const getShippingDot = (service) => {
   }
   return colors[service] || 'bg-gray-500'
 }
+
+onMounted (()=>{
+loadData();
+
+})
 </script>
 
 <template>
@@ -176,20 +147,15 @@ const getShippingDot = (service) => {
                 >
                   Customer Name
                 </th>
-                <th
-                  class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
-                >
-                  Shipping Service
-                </th>
-                <th
-                  class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
-                >
-                  Tracking Code
-                </th>
+              
               </tr>
             </thead>
-            <tbody class="bg-white divide-y divide-gray-200">
-              <tr v-for="(order, index) in orders" :key="index" class="bg-gray-50">
+            <tbody v-if="orders.length > 0" class="bg-white divide-y divide-gray-200">
+              <tr        
+              v-for="(order, index) in orders":key="index" 
+            
+
+              class="bg-gray-50">
                 <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-900">
                   {{ order.id }}
                 </td>
@@ -202,28 +168,18 @@ const getShippingDot = (service) => {
                   </span>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-600">
-                  {{ order.item }}
+                  {{ order.item.length }}
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-900">
                   {{ order.customerName }}
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-900">
-                  <div class="flex items-center justify-center">
-                    <div
-                      :class="getShippingDot(order.shippingService)"
-                      class="w-2 h-2 rounded-full mr-2"
-                    ></div>
-                    <span :class="getShippingServiceStyle(order.shippingService)">
-                      {{ order.shippingService }}
-                    </span>
-                  </div>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-600">
-                  <div class="flex items-center justify-center">
-                    {{ order.trackingCode }}
-                    <i class="fas fa-copy text-gray-400 cursor-pointer ml-2"></i>
-                  </div>
-                </td>
+              </tr>
+            </tbody>
+            <tbody v-else>
+              <tr> 
+              <td colspan="7" class="text-center py-8 text-gray-500">
+                  No orders found.
+               </td>
               </tr>
             </tbody>
           </table>
