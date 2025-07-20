@@ -93,6 +93,16 @@ const logout = () => {
             <span>Create Order</span>
           </router-link>
 
+
+            <router-link
+            to="/templates"
+            class="flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-900 hover:bg-gray-100"
+            exact-active-class="bg-[#E5E7EB] text-black"
+          >
+            <i class="fas fa-plus-circle w-5"></i>
+            <span>Templates</span>
+          </router-link>
+
           <router-link
             to="/settings"
             class="flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-900 hover:bg-gray-100"
@@ -101,6 +111,10 @@ const logout = () => {
             <i class="fas fa-cog w-5"></i>
             <span>Settings</span>
           </router-link>
+
+
+
+
         </nav>
       </div>
 

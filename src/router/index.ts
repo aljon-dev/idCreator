@@ -7,6 +7,7 @@ import Orders from '../views/Orders.vue'
 import CreateOrder from '../views/CreateOrder.vue'
 import Settings from '../views/Settings.vue'
 import FrontPageForm  from '../views/FrontPageForm.vue';
+import Templates from '../views/Templates.vue'
 
 
 const router = createRouter({
@@ -53,6 +54,12 @@ const router = createRouter({
           name: 'ReviewOrder',
           component: () => import('../views/ReviewOrder.vue'),
         },
+         {
+          path: 'templates',
+          name: 'Templates',
+          component: Templates,
+        },
+
         {
           path: 'settings',
           name: 'Settings',
