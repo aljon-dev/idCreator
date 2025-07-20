@@ -57,7 +57,7 @@ const handleLogin = async () => {
           <div class="p-8">
             <!-- Logo -->
             <div class="text-center mb-6">
-              <div class="text-orange-500 text-2xl font-bold mb-2">du ID CREATOR</div>
+              <div class="text-orange-500 text-2xl font-bold mb-2">ID CREATOR</div>
             </div>
 
             <!-- Form title -->

@@ -18,13 +18,13 @@ const newOrder = ref({
   title: '',
   firstName: '',
   middleName: '',
-  lastName: '',
+  lastname: '',
   contactNumber: '',
   email: '',
   orderNumber:randomUID ,
   status: 'Pending',
   item: [] as Record<string,any>,
-  size: '',
+  size: 0,
   template: '',
 })
 
@@ -52,10 +52,12 @@ const handleExcelImport = async (event:Event) => {
   const jsonData = XLSX.utils.sheet_to_json(worksheet);
 
 
+  const safeJsonData = JSON.parse(JSON.stringify(jsonData));
+
     
   if(jsonData.length){
 
-    newOrder.value.item = jsonData;
+    newOrder.value.item =  safeJsonData;
 
     console.log(jsonData);
 
@@ -70,7 +72,7 @@ const handleExcelImport = async (event:Event) => {
 
 const submitOrders  = async () =>{
 
- const result =  await setOrders(newOrder, selectedTemplate.value);
+ const result =  await setOrders(newOrder.value, selectedTemplate.value);
  
  if(result.status == 200){
     toast.success(result.msg);
@@ -107,7 +109,7 @@ const submitOrders  = async () =>{
           </div>
           <div>
             <label class="block text-sm font-medium text-gray-700">Last Name</label>
-            <input v-model="newOrder.lastName" type="text" class="mt-1 w-full border rounded px-3 py-2" />
+            <input v-model="newOrder.lastname" type="text" class="mt-1 w-full border rounded px-3 py-2" />
           </div>
         </div>
       </div>
@@ -198,7 +200,7 @@ const submitOrders  = async () =>{
         <router-link to="/orders">
           <button class="px-4 py-2 mr-2 rounded bg-gray-300 text-gray-700">Cancel</button>
         </router-link>
-        <button @click="submitOrders" class="px-4 py-2 rounded bg-[#DB551B] text-white">Confirm Order</button>
+        <button @click="submitOrders"  class="px-4 py-2 rounded bg-[#DB551B] text-white">Confirm Order</button>
       </div>
     </div>
   </div>
