@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
-import {supabase}  from '@/assets/supabase';
-import { useToast } from 'vue-toast-notification'; 
+import { supabase } from '@/assets/supabase'
+import { useToast } from 'vue-toast-notification'
 
-const toast = useToast();
-
+const toast = useToast()
 
 const stats = reactive({
   submitted: 0,
@@ -14,27 +13,19 @@ const stats = reactive({
 
 const orders = ref<any[]>([])
 
-const loadData =  async () => {
+const loadData = async () => {
+  const { data: orderData, error: loadingError } = await supabase.from('Orders').select('*')
 
-const {data:orderData,error:loadingError} = await supabase.from('Orders').select('*');
+  if (loadingError) {
+    toast.error('Error loading Data')
+  }
 
-   if(loadingError){
-      toast.error('Error loading Data')
-   }
-
-   if (orderData) {
-      orders.value = orderData
-   }
-   
-  
-
+  if (orderData) {
+    orders.value = orderData
+  }
 }
 
-
-
-
-
-const getStatusStyle = (status:string) => {
+const getStatusStyle = (status: string) => {
   switch (status) {
     case 'New order':
       return 'bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs'
@@ -53,7 +44,7 @@ const getStatusStyle = (status:string) => {
   }
 }
 
-const getShippingServiceStyle = (service:any) => {
+const getShippingServiceStyle = (service: 'Standard' | 'Priority' | 'Express') => {
   const style = {
     Standard: 'text-purple-600',
     Priority: 'text-blue-600',
@@ -62,7 +53,7 @@ const getShippingServiceStyle = (service:any) => {
   return style[service] || ''
 }
 
-const getShippingDot = (service:string) => {
+const getShippingDot = (service: 'Standard' | 'Priority' | 'Express') => {
   const colors = {
     Standard: 'bg-purple-500',
     Priority: 'bg-blue-500',
@@ -71,9 +62,8 @@ const getShippingDot = (service:string) => {
   return colors[service] || 'bg-gray-500'
 }
 
-onMounted (()=>{
-loadData();
-
+onMounted(() => {
+  loadData()
 })
 </script>
 
@@ -144,15 +134,10 @@ loadData();
                 >
                   Customer Name
                 </th>
-              
               </tr>
             </thead>
             <tbody v-if="orders.length > 0" class="bg-white divide-y divide-gray-200">
-              <tr        
-              v-for="(order, index) in orders":key="index" 
-            
-
-              class="bg-gray-50">
+              <tr v-for="(order, index) in orders" :key="index" class="bg-gray-50">
                 <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-900">
                   {{ order.id }}
                 </td>
@@ -165,7 +150,7 @@ loadData();
                   </span>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-600">
-                  {{ order.item.length }}
+                  {{ order.item.length ?? 'No Items' }}
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-900">
                   {{ order.customerName }}
@@ -173,10 +158,8 @@ loadData();
               </tr>
             </tbody>
             <tbody v-else>
-              <tr> 
-              <td colspan="7" class="text-center py-8 text-gray-500">
-                  No orders found.
-               </td>
+              <tr>
+                <td colspan="7" class="text-center py-8 text-gray-500">No orders found.</td>
               </tr>
             </tbody>
           </table>

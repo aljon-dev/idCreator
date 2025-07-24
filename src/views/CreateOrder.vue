@@ -1,87 +1,74 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { useToast } from 'vue-toast-notification';
-import { setOrders} from '@/assets/OrdersFunctions/createOrders';
-import * as XLSX from 'xlsx';
+import { useToast } from 'vue-toast-notification'
+import { setOrders } from '@/assets/OrdersFunctions/createOrders'
+import * as XLSX from 'xlsx'
 
 const router = useRouter()
 
+const toast = useToast()
 
-const toast = useToast();
+const date = new Date()
 
-const date = new Date();
-
-const randomUID = date.toISOString;
+const randomUID = Date.now()
 
 const newOrder = ref({
   title: '',
   firstName: '',
+
   middleName: '',
   lastname: '',
   contactNumber: '',
   email: '',
-  orderNumber:randomUID ,
+  orderNumber: randomUID,
   status: 'Pending',
-  item: [] as Record<string,any>,
+  item: [] as Record<string, any>,
   size: 0,
   template: '',
 })
 
 const selectedTemplate = ref<string | number | null>(null)
 
-
-const selectTemplate = (template:number) => {
+const selectTemplate = (template: number) => {
   selectedTemplate.value = template
 }
 
+const handleExcelImport = async (event: Event) => {
+  const target = event.target as HTMLInputElement
+  const file = target.files?.[0]
 
-const handleExcelImport = async (event:Event) => {
-   const target = event.target as HTMLInputElement;
-   const file = target.files?.[0];
-   
-  if(!file) return;
+  if (!file) return
 
+  try {
+    const data = await file.arrayBuffer()
+    const workbook = XLSX.read(data)
+    const worksheet = workbook.Sheets[workbook.SheetNames[0]]
+    const jsonData = XLSX.utils.sheet_to_json(worksheet)
 
+    const safeJsonData = JSON.parse(JSON.stringify(jsonData))
 
-  try{
+    if (jsonData.length) {
+      newOrder.value.item = safeJsonData
 
-  const data = await file.arrayBuffer();
-  const workbook = XLSX.read(data);
-  const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-  const jsonData = XLSX.utils.sheet_to_json(worksheet);
+      console.log(jsonData)
 
-
-  const safeJsonData = JSON.parse(JSON.stringify(jsonData));
-
-    
-  if(jsonData.length){
-
-    newOrder.value.item =  safeJsonData;
-
-    console.log(jsonData);
-
-    toast.success('Successfully Inserted the Data ')
+      toast.success('Successfully Inserted the Data ')
+    }
+  } catch (e) {
+    toast.error('Failed to insert the Excel File ')
   }
-
-  }catch(e){
-      toast.error('Failed to insert the Excel File ')
-  }
-
 }
 
-const submitOrders  = async () =>{
+const submitOrders = async () => {
+  const result = await setOrders(newOrder.value, selectedTemplate.value)
 
- const result =  await setOrders(newOrder.value, selectedTemplate.value);
- 
- if(result.status == 200){
-    toast.success(result.msg);
- }else{
-   toast.error(result.msg);
- }
-
+  if (result.status == 200) {
+    toast.success(result.msg)
+  } else {
+    toast.error(result.msg)
+  }
 }
-
 </script>
 
 <template>
@@ -97,19 +84,35 @@ const submitOrders  = async () =>{
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div>
             <label class="block text-sm font-medium text-gray-700">Title</label>
-             <input class="mt-1 w-full border rounded px-3 py-2" type="text" v-model="newOrder.title"/>
+            <input
+              class="mt-1 w-full border rounded px-3 py-2"
+              type="text"
+              v-model="newOrder.title"
+            />
           </div>
           <div>
             <label class="block text-sm font-medium text-gray-700">First Name</label>
-            <input v-model="newOrder.firstName" type="text" class="mt-1 w-full border rounded px-3 py-2" />
+            <input
+              v-model="newOrder.firstName"
+              type="text"
+              class="mt-1 w-full border rounded px-3 py-2"
+            />
           </div>
           <div>
             <label class="block text-sm font-medium text-gray-700">Middle Name</label>
-            <input v-model="newOrder.middleName" type="text" class="mt-1 w-full border rounded px-3 py-2" />
+            <input
+              v-model="newOrder.middleName"
+              type="text"
+              class="mt-1 w-full border rounded px-3 py-2"
+            />
           </div>
           <div>
             <label class="block text-sm font-medium text-gray-700">Last Name</label>
-            <input v-model="newOrder.lastname" type="text" class="mt-1 w-full border rounded px-3 py-2" />
+            <input
+              v-model="newOrder.lastname"
+              type="text"
+              class="mt-1 w-full border rounded px-3 py-2"
+            />
           </div>
         </div>
       </div>
@@ -118,14 +121,21 @@ const submitOrders  = async () =>{
       <div>
         <h3 class="text-md font-semibold text-gray-800 mb-2">Contact Information</h3>
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-          
           <div>
             <label class="block text-sm font-medium text-gray-700">Contact Number</label>
-            <input v-model="newOrder.contactNumber" type="text" class="mt-1 w-full border rounded px-3 py-2" />
+            <input
+              v-model="newOrder.contactNumber"
+              type="text"
+              class="mt-1 w-full border rounded px-3 py-2"
+            />
           </div>
           <div class="md:col-span-2">
             <label class="block text-sm font-medium text-gray-700">Email Address</label>
-            <input v-model="newOrder.email" type="email" class="mt-1 w-full border rounded px-3 py-2" />
+            <input
+              v-model="newOrder.email"
+              type="email"
+              class="mt-1 w-full border rounded px-3 py-2"
+            />
           </div>
         </div>
       </div>
@@ -135,15 +145,14 @@ const submitOrders  = async () =>{
         <h3 class="text-md font-semibold text-gray-800 mb-2">ID Information</h3>
         <label class="block text-sm font-medium text-gray-700">Import Excel File</label>
         <input
-         type="file" 
-        class="mt-1 w-full border rounded px-3 py-2" 
-        accept=".xlsx, .xls"
-        @change="handleExcelImport"
+          type="file"
+          class="mt-1 w-full border rounded px-3 py-2"
+          accept=".xlsx, .xls"
+          @change="handleExcelImport"
         />
       </div>
 
       <!-- Order Info Section -->
-  
 
       <!-- Template Selection -->
       <div>
@@ -157,21 +166,28 @@ const submitOrders  = async () =>{
             <input type="file" accept="image/*" class="hidden" />
             <i class="fas fa-upload text-2xl text-gray-500 mb-2"></i>
             <span class="text-sm text-gray-600">Import Template</span>
-            <div v-if="selectedTemplate === 'imported'" class="absolute bottom-2 right-2 bg-white rounded-full p-1 shadow">
+            <div
+              v-if="selectedTemplate === 'imported'"
+              class="absolute bottom-2 right-2 bg-white rounded-full p-1 shadow"
+            >
               <i class="fas fa-check text-orange-500 text-sm"></i>
             </div>
           </label>
 
           <!-- Imported Template Preview -->
           <div
-
             class="relative border rounded-md p-2 transition"
-            :class="selectedTemplate === 'imported' ? 'border-orange-500' : 'border-gray-300 hover:border-orange-400'"
-          
+            :class="
+              selectedTemplate === 'imported'
+                ? 'border-orange-500'
+                : 'border-gray-300 hover:border-orange-400'
+            "
           >
-          
             <p class="text-xs text-center mt-1 text-gray-600">Imported Template</p>
-            <div v-if="selectedTemplate === 'imported'" class="absolute bottom-2 right-2 bg-white rounded-full p-1 shadow">
+            <div
+              v-if="selectedTemplate === 'imported'"
+              class="absolute bottom-2 right-2 bg-white rounded-full p-1 shadow"
+            >
               <i class="fas fa-check text-orange-500 text-sm"></i>
             </div>
           </div>
@@ -183,12 +199,21 @@ const submitOrders  = async () =>{
             @click="selectTemplate(n)"
             :class="[
               'relative border rounded-md p-2 cursor-pointer transition',
-              selectedTemplate === n ? 'border-orange-500' : 'border-gray-300 hover:border-orange-400'
+              selectedTemplate === n
+                ? 'border-orange-500'
+                : 'border-gray-300 hover:border-orange-400',
             ]"
           >
-            <img :src="`/templates/placeholder${n}.jpg`" alt="Template Preview" class="w-full h-24 object-cover rounded" />
+            <img
+              :src="`/templates/placeholder${n}.jpg`"
+              alt="Template Preview"
+              class="w-full h-24 object-cover rounded"
+            />
             <p class="text-xs text-center mt-1 text-gray-600">Template {{ n }}</p>
-            <div v-if="selectedTemplate === n" class="absolute bottom-2 right-2 bg-white rounded-full p-1 shadow">
+            <div
+              v-if="selectedTemplate === n"
+              class="absolute bottom-2 right-2 bg-white rounded-full p-1 shadow"
+            >
               <i class="fas fa-check text-orange-500 text-sm"></i>
             </div>
           </div>
@@ -200,11 +225,10 @@ const submitOrders  = async () =>{
         <router-link to="/orders">
           <button class="px-4 py-2 mr-2 rounded bg-gray-300 text-gray-700">Cancel</button>
         </router-link>
-        <button @click="submitOrders"  class="px-4 py-2 rounded bg-[#DB551B] text-white">Confirm Order</button>
+        <button @click="submitOrders" class="px-4 py-2 rounded bg-[#DB551B] text-white">
+          Confirm Order
+        </button>
       </div>
     </div>
   </div>
 </template>
-
-
-

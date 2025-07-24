@@ -15,3 +15,10 @@ export interface Order {
   shippingService?: string
   template?: string
 }
+
+export interface FilteredOrder {
+  id: number | string
+  customerName: string
+  status: string
+  [key: string]: any
+}
