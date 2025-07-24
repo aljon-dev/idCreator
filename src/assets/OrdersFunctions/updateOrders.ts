@@ -1,13 +1,8 @@
 import { supabase } from '../supabase'
 
-const updateOrders = async (
-  newOrders: {},
-  selectedTemplate: string | number | null,
-  orderId: number | number,
-) => {
+const updateOrders = async (newOrders: {}, orderId: number | string) => {
   newOrders = {
     ...newOrders,
-    template: selectedTemplate,
   }
 
   const { error } = await supabase.from('Orders').update(newOrders).eq('id', orderId)
@@ -24,3 +19,5 @@ const updateOrders = async (
     msg: 'Successfully Updated the Order',
   }
 }
+
+export { updateOrders }

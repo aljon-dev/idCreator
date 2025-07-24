@@ -21,7 +21,7 @@ const newOrder = ref({
   contactNumber: '',
   email: '',
   orderNumber: randomUID,
-  status: 'Pending',
+  status: 'New order',
   item: [] as Record<string, any>,
   size: 0,
   template: '',

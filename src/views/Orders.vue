@@ -5,6 +5,7 @@ import { supabase } from '../assets/supabase'
 
 import { deleteOrders } from '@/assets/OrdersFunctions/deleteOrders'
 import { useToast } from 'vue-toast-notification'
+import { updateOrders } from '@/assets/OrdersFunctions/updateOrders'
 
 const toast = useToast()
 
@@ -63,7 +64,16 @@ const uniqueStatuses = computed(() => [
 ])
 
 const openModal = (order: Order) => {
-  selectedOrder.value = { ...order }
+  selectedOrder.value = {
+    ...order,
+    // Ensure all fields are initialized
+    lastname: order.lastname || '',
+    firstName: order.firstName || '',
+    middleName: order.middleName || '',
+    title: order.title || 'School name',
+    email: order.email || '',
+    template: order.template || 'template1',
+  }
   showModal.value = true
 }
 
@@ -130,6 +140,20 @@ const endCount = computed(() => Math.min(currentPage.value * pageSize, filteredO
 const changePage = (page: number) => {
   if (page >= 1 && page <= totalPages.value) {
     currentPage.value = page
+  }
+}
+
+const handleUpdate = async (selectedData: any, orderId: number | string) => {
+  console.log('CLICKED HANDLE UPDATE')
+  const response = await updateOrders(selectedData, orderId)
+  console.log(response)
+  closeModal()
+
+  if (response.status === 200) {
+    toast.success(response.msg)
+    loadData()
+  } else {
+    toast.error(response.msg)
   }
 }
 </script>
@@ -287,12 +311,12 @@ const changePage = (page: number) => {
             <h3 class="text-md font-semibold text-gray-800 mb-2">Customer Name</h3>
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div>
-                <label class="block text-sm font-medium text-gray-700">Title</label>
-                <select v-model="selectedOrder.title" class="mt-1 w-full border rounded px-3 py-2">
-                  <option>Mr.</option>
-                  <option>Ms.</option>
-                  <option>Mrs.</option>
-                </select>
+                <label class="block text-sm font-medium text-gray-700">School Name</label>
+                <input
+                  v-model="selectedOrder.title"
+                  type="text"
+                  class="mt-1 w-full border rounded px-3 py-2"
+                />
               </div>
               <div>
                 <label class="block text-sm font-medium text-gray-700">First Name</label>
@@ -313,7 +337,7 @@ const changePage = (page: number) => {
               <div>
                 <label class="block text-sm font-medium text-gray-700">Last Name</label>
                 <input
-                  v-model="selectedOrder.lastName"
+                  v-model="selectedOrder.lastname"
                   type="text"
                   class="mt-1 w-full border rounded px-3 py-2"
                 />
@@ -325,14 +349,6 @@ const changePage = (page: number) => {
           <div>
             <h3 class="text-md font-semibold text-gray-800 mb-2">Contact Information</h3>
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-              <div>
-                <label class="block text-sm font-medium text-gray-700">ID Number</label>
-                <input
-                  v-model="selectedOrder.idNumber"
-                  type="text"
-                  class="mt-1 w-full border rounded px-3 py-2"
-                />
-              </div>
               <div>
                 <label class="block text-sm font-medium text-gray-700">Contact Number</label>
                 <input
@@ -392,27 +408,14 @@ const changePage = (page: number) => {
                 </select>
               </div>
               <div>
-                <label class="block text-sm font-medium text-gray-700">Item</label>
+                <label class="block text-sm font-medium text-gray-700"
+                  >Number of students registered</label
+                >
                 <input
-                  v-model="selectedOrder.item"
+                  :value="Array.isArray(selectedOrder.item) ? selectedOrder.item.length : 0"
                   type="number"
                   class="mt-1 w-full border rounded px-3 py-2"
-                />
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-700">Shipping Service</label>
-                <input
-                  v-model="selectedOrder.shippingService"
-                  type="text"
-                  class="mt-1 w-full border rounded px-3 py-2"
-                />
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-700">Tracking Code</label>
-                <input
-                  v-model="selectedOrder.trackingCode"
-                  type="text"
-                  class="mt-1 w-full border rounded px-3 py-2"
+                  disabled
                 />
               </div>
             </div>
@@ -504,7 +507,10 @@ const changePage = (page: number) => {
           <button @click="closeModal" class="px-4 py-2 rounded bg-gray-300 text-gray-700 mr-2">
             Cancel
           </button>
-          <button @click="saveChanges" class="px-4 py-2 rounded bg-[#DB551B] text-white">
+          <button
+            @click="handleUpdate(selectedOrder, selectedOrder.id)"
+            class="px-4 py-2 rounded bg-[#DB551B] text-white"
+          >
             Save Changes
           </button>
         </div>

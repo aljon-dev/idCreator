@@ -4,15 +4,13 @@ export interface Order {
   status: string
   item: number
   customerName: string
-  trackingCode?: string
   title?: string
   firstName?: string
   middleName?: string
-  lastName?: string
-  idNumber?: string
+  lastname?: string
   contactNumber?: string
   email?: string
-  shippingService?: string
+
   template?: string
 }
 
