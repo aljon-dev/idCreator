@@ -6,7 +6,6 @@ import 'vue3-draggable-resizable/dist/Vue3DraggableResizable.css'
 import { uploadTemplates } from '@/assets/TemplatesFunctions/UploadTemplate'
 import { useToast } from 'vue-toast-notification'
 
-
 const toast = useToast();
 
 const activeField = ref<string | null>(null)
@@ -92,7 +91,7 @@ const saveLayout = async () => {
   <div class="mx-auto p-6 w-full">
     <div class="flex justify-between items-center">
       <h1 class="text-2xl font-bold text-gray-800">ID Template Designer</h1>
-      <button  @onclick="saveLayout" class="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600">
+      <button  @click="saveLayout" class="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600">
         Save Layout
       </button>
     </div>

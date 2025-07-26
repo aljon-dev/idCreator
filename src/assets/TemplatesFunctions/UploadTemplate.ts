@@ -15,17 +15,17 @@ const  uploadTemplates = async (frontImage:File, backImage:File,FrontFields:any[
             const filePathBack = `backTemplate/${fileNameBack}`;
 
             const {data:frontImageUrl, error: frontImageError} = await supabase.storage
-            .from('Templates').upload(filePathFront,frontImage) 
+            .from('templates').upload(filePathFront,frontImage) 
             
             const {data:backImageUrl, error: backImageError} = await supabase.storage 
-            .from('Templates').upload(filePathBack,backImage);
+            .from('templates').upload(filePathBack,backImage);
 
             
             const {data:frontPublic} =  supabase.storage
-            .from('Templates').getPublicUrl(filePathFront);
+            .from('templates').getPublicUrl(filePathFront);
 
             const {data:backPublic} =  supabase.storage
-            .from('Templates').getPublicUrl(filePathBack);
+            .from('templates').getPublicUrl(filePathBack);
 
 
 
