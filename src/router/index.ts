@@ -8,6 +8,7 @@ import CreateOrder from '../views/CreateOrder.vue'
 import Settings from '../views/Settings.vue'
 import FrontPageForm  from '../views/FrontPageForm.vue';
 import Templates from '../views/Templates.vue'
+import ResultTemplate from '../views/ResultTemplate.vue'
 
 
 const router = createRouter({
@@ -58,6 +59,13 @@ const router = createRouter({
           path: 'templates',
           name: 'Templates',
           component: Templates,
+        },
+
+        {
+          path:'ResultTemplate',
+          name: 'ResultTemplate',
+          component:ResultTemplate,
+
         },
 
         {
