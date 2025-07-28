@@ -2,16 +2,17 @@
 
    import type { StudentItem } from '@/assets/types';
 import { ref, computed, type PropType } from 'vue'
-   import { useToast } from 'vue-toast-notification'
+import { useToast } from 'vue-toast-notification'
+import { uploadProfilePhoto  } from '@/assets/ItemsTableFunctions/uploadProfilePhoto'
 
 
 
-   const toast = useToast()
+  const toast = useToast()
 
 
 
  
- const { items, show } = defineProps<{
+ const { orderId, items, show } = defineProps<{
    orderId:string| number, 
   items: StudentItem[]
   show: boolean
@@ -21,6 +22,28 @@ import { ref, computed, type PropType } from 'vue'
         (e:'close'):void
 
     }>()
+
+
+  const  HandleuploadProfilePhoto = async (event:Event, index:number,) =>{
+      const eventTarget = event.target as HTMLInputElement;
+      const file = eventTarget.files?.[0];
+
+      if (!file) {
+          toast.error('No file selected');
+          return;
+      }
+
+      const response = await uploadProfilePhoto(file, orderId, index);
+
+      if(response.status === 200){
+          items[index].photo = response.msg; // Assuming response.msg contains the URL of the uploaded photo
+          toast.success('Photo uploaded successfully');
+    
+
+      }else{
+          toast.error(response.msg);
+      }
+  }
 
 
 </script>
@@ -81,7 +104,8 @@ import { ref, computed, type PropType } from 'vue'
                     accept="image/*"
                     class="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
                     title="Upload Student Photo"
-                  
+                    @change="(event) =>  HandleuploadProfilePhoto(event,index)"
+    
                   />
                 </div>
               </td>

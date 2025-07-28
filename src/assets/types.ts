@@ -32,3 +32,8 @@ export interface StudentItem {
   'CONTACT NO':string,
    photo?: string
 }
+
+export   type UploadResponse = {
+  status: number
+  msg: string
+}
