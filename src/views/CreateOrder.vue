@@ -154,76 +154,13 @@ const submitOrders = async () => {
       <!-- Order Info Section -->
 
       <!-- Template Selection -->
-      <div>
-        <label class="block text-sm font-medium text-gray-700 mb-2">Choose Template</label>
-        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
-          <!-- Import Template -->
-          <label
-            class="relative border border-dashed rounded-md p-4 flex flex-col items-center justify-center hover:border-orange-400 cursor-pointer transition text-center"
-            :class="selectedTemplate === 'imported' ? 'border-orange-500' : 'border-gray-300'"
-          >
-            <input type="file" accept="image/*" class="hidden" />
-            <i class="fas fa-upload text-2xl text-gray-500 mb-2"></i>
-            <span class="text-sm text-gray-600">Import Template</span>
-            <div
-              v-if="selectedTemplate === 'imported'"
-              class="absolute bottom-2 right-2 bg-white rounded-full p-1 shadow"
-            >
-              <i class="fas fa-check text-orange-500 text-sm"></i>
-            </div>
-          </label>
-
-          <!-- Imported Template Preview -->
-          <div
-            class="relative border rounded-md p-2 transition"
-            :class="
-              selectedTemplate === 'imported'
-                ? 'border-orange-500'
-                : 'border-gray-300 hover:border-orange-400'
-            "
-          >
-            <p class="text-xs text-center mt-1 text-gray-600">Imported Template</p>
-            <div
-              v-if="selectedTemplate === 'imported'"
-              class="absolute bottom-2 right-2 bg-white rounded-full p-1 shadow"
-            >
-              <i class="fas fa-check text-orange-500 text-sm"></i>
-            </div>
-          </div>
-
-          <!-- Placeholder Templates -->
-          <div
-            v-for="n in 5"
-            :key="n"
-            @click="selectTemplate(n)"
-            :class="[
-              'relative border rounded-md p-2 cursor-pointer transition',
-              selectedTemplate === n
-                ? 'border-orange-500'
-                : 'border-gray-300 hover:border-orange-400',
-            ]"
-          >
-            <img
-              :src="`/templates/placeholder${n}.jpg`"
-              alt="Template Preview"
-              class="w-full h-24 object-cover rounded"
-            />
-            <p class="text-xs text-center mt-1 text-gray-600">Template {{ n }}</p>
-            <div
-              v-if="selectedTemplate === n"
-              class="absolute bottom-2 right-2 bg-white rounded-full p-1 shadow"
-            >
-              <i class="fas fa-check text-orange-500 text-sm"></i>
-            </div>
-          </div>
-        </div>
-      </div>
+      
 
       <!-- Review Button -->
       <div class="mt-6 text-right">
         <router-link to="/orders">
           <button class="px-4 py-2 mr-2 rounded bg-gray-300 text-gray-700">Cancel</button>
-        </router-link>
+        </router-link> 
         <button @click="submitOrders" class="px-4 py-2 rounded bg-[#DB551B] text-white">
           Confirm Order
         </button>

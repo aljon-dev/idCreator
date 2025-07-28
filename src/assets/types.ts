@@ -20,3 +20,15 @@ export interface FilteredOrder {
   status: string
   [key: string]: any
 }
+
+
+export interface StudentItem {
+  'NAME OF STUDENT':string,
+  ADDRESS:string,
+  BIRTHDAY:string | number,
+  'YR /SEC/ course':string,
+  LRN:string,
+  'GUARDIAN/ PARENT':string,
+  'CONTACT NO':string,
+   photo?: string
+}

@@ -6,6 +6,7 @@ import { supabase } from '../assets/supabase'
 import { deleteOrders } from '@/assets/OrdersFunctions/deleteOrders'
 import { useToast } from 'vue-toast-notification'
 import { updateOrders } from '@/assets/OrdersFunctions/updateOrders'
+import ItemsTable from '@/views/Modals/ItemsTable.vue'
 
 const toast = useToast()
 
@@ -18,6 +19,9 @@ const orders = ref<Order[]>([])
 const importedEditTemplate = ref<string | null>(null)
 const currentPage = ref(1)
 const pageSize = 10
+
+
+const showStudentsTable = ref(false);
 
 const loadData = async () => {
   const { data: orderData, error: loadingError } = await supabase.from('Orders').select('*')
@@ -156,9 +160,27 @@ const handleUpdate = async (selectedData: any, orderId: number | string) => {
     toast.error(response.msg)
   }
 }
+
+const openStudentModal = (order: Order) => {
+  selectedOrder.value = order;
+  showStudentsTable.value = true;
+}
+
+
+
 </script>
 
 <template>
+
+  <ItemsTable
+    v-if="showStudentsTable"
+    :orderId="selectedOrder.id"
+    :items="Array.isArray(selectedOrder.item) ? selectedOrder.item : []"
+    :show="showStudentsTable"
+    @close="showStudentsTable = false"
+  />
+
+
   <div class="p-2 bg-gray-50 min-h-screen">
     <div class="flex items-center justify-between mb-8">
       <h1 class="text-2xl font-semibold text-gray-900">Orders</h1>
@@ -227,7 +249,8 @@ const handleUpdate = async (selectedData: any, orderId: number | string) => {
               </span>
             </td>
             <td class="px-4 py-4 text-center whitespace-nowrap">
-              {{ (order.item as unknown as any[]).length }}
+              {{ (order.item as unknown as any[]).length }} 
+              <button @click="openStudentModal(order)"><i class="fa fa-eye text-[#DB551B] hover:text-gray-600" aria-hidden="true"></i></button>
             </td>
             <td class="px-4 py-4 text-center whitespace-nowrap">{{ order.customerName }}</td>
             <td
@@ -421,85 +444,11 @@ const handleUpdate = async (selectedData: any, orderId: number | string) => {
             </div>
           </div>
 
-          <!-- Template Selection -->
-          <div>
-            <h3 class="text-md font-semibold text-gray-800 mb-2">Choose Template</h3>
-            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
-              <!-- Upload -->
-              <label
-                class="relative border border-dashed rounded-md p-4 flex flex-col items-center justify-center hover:border-orange-400 cursor-pointer transition text-center"
-                :class="
-                  selectedOrder.template === 'imported' ? 'border-orange-500' : 'border-gray-300'
-                "
-              >
-                <input
-                  type="file"
-                  accept="image/*"
-                  class="hidden"
-                  @change="handleEditTemplateUpload"
-                />
-                <i class="fas fa-upload text-2xl text-gray-500 mb-2"></i>
-                <span class="text-sm text-gray-600">Import Template</span>
-                <div
-                  v-if="selectedOrder.template === 'imported'"
-                  class="absolute bottom-2 right-2 bg-white rounded-full p-1 shadow"
-                >
-                  <i class="fas fa-check text-orange-500 text-sm"></i>
-                </div>
-              </label>
+         
+      
 
-              <!-- Preview of uploaded -->
-              <div
-                v-if="importedEditTemplate"
-                class="relative border rounded-md p-2 transition"
-                :class="
-                  selectedOrder.template === 'imported'
-                    ? 'border-orange-500'
-                    : 'border-gray-300 hover:border-orange-400'
-                "
-                @click="selectedOrder.template = 'imported'"
-              >
-                <img
-                  :src="importedEditTemplate"
-                  alt="Imported Template"
-                  class="w-full h-24 object-cover rounded"
-                />
-                <p class="text-xs text-center mt-1 text-gray-600">Imported Template</p>
-                <div
-                  v-if="selectedOrder.template === 'imported'"
-                  class="absolute bottom-2 right-2 bg-white rounded-full p-1 shadow"
-                >
-                  <i class="fas fa-check text-orange-500 text-sm"></i>
-                </div>
-              </div>
-
-              <!-- Default Templates -->
-              <div
-                v-for="n in 5"
-                :key="n"
-                @click="selectedOrder.template = `template${n}`"
-                :class="[
-                  'relative border rounded-md p-2 cursor-pointer transition',
-                  selectedOrder.template === `template${n}`
-                    ? 'border-orange-500'
-                    : 'border-gray-300 hover:border-orange-400',
-                ]"
-              >
-                <img
-                  :src="`/templates/placeholder${n}.jpg`"
-                  alt="Template"
-                  class="w-full h-24 object-cover rounded"
-                />
-                <p class="text-xs text-center mt-1 text-gray-600">Template {{ n }}</p>
-                <div
-                  v-if="selectedOrder.template === `template${n}`"
-                  class="absolute bottom-2 right-2 bg-white rounded-full p-1 shadow"
-                >
-                  <i class="fas fa-check text-orange-500 text-sm"></i>
-                </div>
-              </div>
-            </div>
-          </div>
+             
+     
         </div>
 
         <!-- Action -->
