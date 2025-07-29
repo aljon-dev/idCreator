@@ -8,7 +8,7 @@ import {useToast } from 'vue-toast-notification';
 
 
  const title = ref<string[]>([]);
- const selectedTitle = ref<string | null>(null);
+ const selectedTitle = ref<string | null>('Select School');
 
  const loadTitle  = async () => {
 
@@ -66,6 +66,7 @@ import {useToast } from 'vue-toast-notification';
        <div class="flex flex-col w-1//2">
         <label class="text-gray-700 font-semibold mb-2">Select School</label>
          <select class="py-2 px-2 border border-gray-300  rounded" v-model="selectedTitle">
+            
             <option v-for="(item, index) in title" :key="index" :value="item">
       {{ item }}
     </option>

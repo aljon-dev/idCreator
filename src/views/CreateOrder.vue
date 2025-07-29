@@ -13,6 +13,8 @@ const date = new Date()
 
 const randomUID = Date.now()
 
+const FileImage = ref<File>();
+
 const newOrder = ref({
   title: '',
   firstName: '',
@@ -23,15 +25,24 @@ const newOrder = ref({
   orderNumber: randomUID,
   status: 'New order',
   item: [] as Record<string, any>,
-  size: 0,
-  template: '',
+  section:'',
+  e_signature:'',
+  teacher_name:'',
+  princial:''
 })
 
-const selectedTemplate = ref<string | number | null>(null)
 
-const selectTemplate = (template: number) => {
-  selectedTemplate.value = template
-}
+
+
+  const handleInputImage = async (event:Event) => {
+      const target = event.target as HTMLInputElement;
+      const file = target.files?.[0];
+
+      FileImage.value = file;
+
+
+  }
+
 
 const handleExcelImport = async (event: Event) => {
   const target = event.target as HTMLInputElement
@@ -60,13 +71,43 @@ const handleExcelImport = async (event: Event) => {
 }
 
 const submitOrders = async () => {
-  const result = await setOrders(newOrder.value, selectedTemplate.value)
+
+  if(!FileImage.value){
+    toast.error('Please Upload your e-signature Image ');
+    return;
+  }
+
+  const result = await setOrders(newOrder.value,FileImage.value)
 
   if (result.status == 200) {
     toast.success(result.msg)
+
+  newOrder.value = {
+  title: '',
+  firstName: '',
+  middleName: '',
+  lastname: '',
+  contactNumber: '',
+  email: '',
+  orderNumber: Date.now(), // Regenerate order number
+  status: 'New order',
+  item: [],
+  section: '',
+  e_signature: '',
+  teacher_name: '',
+  princial: ''
+}
+
+ FileImage.value = undefined;
+    
+
+  
   } else {
     toast.error(result.msg)
   }
+  
+
+
 }
 </script>
 
@@ -79,7 +120,7 @@ const submitOrders = async () => {
     <div class="space-y-6 max-w-5xl mx-auto">
       <!-- Customer Name Section -->
       <div>
-        <h3 class="text-md font-semibold text-gray-800 mb-2">Customer Name</h3>
+        <h3 class="text-md font-semibold text-gray-800 mb-2">School Information</h3>
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div>
             <label class="block text-sm font-medium text-gray-700">School Name</label>
@@ -89,6 +130,47 @@ const submitOrders = async () => {
               v-model="newOrder.title"
             />
           </div>
+
+             <div>
+            <label class="block text-sm font-medium text-gray-700">Section|Grade</label>
+            <input
+              v-model="newOrder.section"
+              type="text"
+              class="mt-1 w-full border rounded px-3 py-2"
+            />
+          </div>
+
+           <div>
+            <label class="block text-sm font-medium text-gray-700">Principal</label>
+            <input
+              v-model="newOrder.princial"
+              type="text"
+              class="mt-1 w-full border rounded px-3 py-2"
+            />
+          </div>
+
+           <div>
+            <label class="block text-sm font-medium text-gray-700">Adviser</label>
+            <input
+              v-model="newOrder.teacher_name"
+              type="text"
+              class="mt-1 w-full border rounded px-3 py-2"
+            />
+          </div>
+
+
+
+
+          
+          
+        </div>
+      </div>
+
+      <!-- Contact Info Section -->
+      <div>
+        <h3 class="text-md font-semibold text-gray-800 mb-2">User Information</h3>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+
           <div>
             <label class="block text-sm font-medium text-gray-700">First Name</label>
             <input
@@ -113,13 +195,6 @@ const submitOrders = async () => {
               class="mt-1 w-full border rounded px-3 py-2"
             />
           </div>
-        </div>
-      </div>
-
-      <!-- Contact Info Section -->
-      <div>
-        <h3 class="text-md font-semibold text-gray-800 mb-2">Contact Information</h3>
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div>
             <label class="block text-sm font-medium text-gray-700">Contact Number</label>
             <input
@@ -128,7 +203,7 @@ const submitOrders = async () => {
               class="mt-1 w-full border rounded px-3 py-2"
             />
           </div>
-          <div class="md:col-span-2">
+          <div>
             <label class="block text-sm font-medium text-gray-700">Email Address</label>
             <input
               v-model="newOrder.email"
@@ -136,6 +211,8 @@ const submitOrders = async () => {
               class="mt-1 w-full border rounded px-3 py-2"
             />
           </div>
+
+        
         </div>
       </div>
 
@@ -150,6 +227,21 @@ const submitOrders = async () => {
           @change="handleExcelImport"
         />
       </div>
+
+      <div>
+        <h3 class="text-md font-semibold text-gray-800 mb-2">E-Signature </h3>
+         <label class="block text-sm font-medium text-gray-700">Choose image file</label>
+         <input
+          type="file"
+          class="mt-1 w-full border rounded px-3 py-2"
+          accept="image/*"
+          @change="handleInputImage"
+         
+        />
+      </div>
+
+
+      
 
       <!-- Order Info Section -->
 

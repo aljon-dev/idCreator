@@ -2,16 +2,33 @@ import {supabase } from '../supabase';
 
 
 
-const setOrders =  async (
+const setOrders =  async ( newOrders: {},imageFile:File ) => {
+
+        const FileExtended = imageFile.name.split('.').pop();
+        
+        const filePath = `E_signature/${FileExtended}`;
+
+
+        const {error:uploadError} = await supabase.storage.from('templates').upload(filePath,imageFile,{
+            cacheControl:'3600',
+            upsert:true,
+        })
+
+        if(uploadError){
+            return{
+                status:500,
+                msg:uploadError.message
+            }
+        }
+
+        const {data:publicImageUrl,} = await supabase.storage.from('templates').getPublicUrl(filePath);
+
     
-    newOrders: {},
-    selectedTemplate:string | number | null,
-    
-    ) => {
 
         const newOrderData = {
             ...newOrders,
-            template:selectedTemplate,
+            e_signature: publicImageUrl.publicUrl,
+            
         }
         const { error } = await supabase.from('Orders').insert([newOrderData])
             
