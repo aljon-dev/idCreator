@@ -3,6 +3,8 @@ import { onMounted, onRenderTracked, ref, watch } from 'vue'
 import { supabase } from '../assets/supabase'
 import { useToast } from 'vue-toast-notification'
 
+import { RegisterId } from '../assets/RegisterFunctions/userRegisterId'
+
 const toast = useToast()
 
 const SelectedSection = ref<string>('Select Grade | Section')
@@ -11,19 +13,19 @@ const SelectedSchool = ref<string>('Select School')
 const loadSection = ref<any[]>([])
 const loadSchool = ref<any[]>([])
 
+const barangay = ref<string>('')
+const streename = ref<string>('')
+const city = ref<string>('')
+const zipCode = ref<string>('')
+
 const formData = ref({
   fullName: '',
   school: '',
   grade: '',
   section: '',
-  address: {
-    street: '',
-    city: '',
-    zipCode: '',
-    barangay: '',
-  },
+  LRN: '',
+  address: `${barangay} + ${streename} + ${city}, + ${zipCode}`,
   photo: null as File | null,
-  signature: null as File | null,
 })
 
 const photoPreview = ref<string | null>(null)
@@ -115,6 +117,16 @@ watch(
 onMounted(() => {
   LoadData()
 })
+
+const handleSubmitForm = async () => {
+  const response = await RegisterId(formData.photo, formData)
+
+  if (response?.status === 200) {
+    toast.success('Successfully Send')
+  } else {
+    toast.error('Failed to send')
+  }
+}
 </script>
 
 <template>
@@ -235,7 +247,20 @@ onMounted(() => {
                 />
               </div>
 
-              <!-- E-Signature Upload Section -->
+              <!-- LRN Section -->
+
+              <div class="space-y-2">
+                <label for="fullName" class="block text-sm font-medium text-gray-700">
+                  Full Name *
+                </label>
+                <input
+                  v-model="formData.LRN"
+                  type="text"
+                  required
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="Enter your full name"
+                />
+              </div>
 
               <!-- Address Section -->
               <div class="space-y-4">
@@ -246,7 +271,7 @@ onMounted(() => {
                     Street Address *
                   </label>
                   <input
-                    v-model="formData.address.street"
+                    v-model="streename"
                     type="text"
                     id="street"
                     required
@@ -261,7 +286,7 @@ onMounted(() => {
                       City *
                     </label>
                     <input
-                      v-model="formData.address.city"
+                      v-model="city"
                       type="text"
                       id="city"
                       required
@@ -275,7 +300,7 @@ onMounted(() => {
                       Barangay
                     </label>
                     <input
-                      v-model="formData.address.barangay"
+                      v-model="barangay"
                       type="text"
                       id="state"
                       required
@@ -291,7 +316,7 @@ onMounted(() => {
                       ZIP/Postal Code *
                     </label>
                     <input
-                      v-model="formData.address.zipCode"
+                      v-model="zipCode"
                       type="text"
                       id="zipCode"
                       required
@@ -306,6 +331,7 @@ onMounted(() => {
               <div class="pt-4">
                 <button
                   type="submit"
+                  @click="handleSubmitForm"
                   class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out"
                 >
                   Submit Registration
